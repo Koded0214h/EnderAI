@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AetherForm Data Vault</title>
+    <style>
+        body { width: 600px; padding: 20px; font-family: sans-serif; }
+        h1 { color: #007bff; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input[type="text"], textarea { 
+            width: 98%; 
+            padding: 8px; 
+            margin-top: 5px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px;
+        }
+        textarea { height: 100px; }
+        button { 
+            margin-top: 20px; 
+            padding: 10px 20px; 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer;
+        }
+        #status { margin-top: 15px; color: green; }
+        .form-section { margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 6px; }
+    </style>
+</head>
+<body>
+    <h1>AetherForm Data Vault: Your Information</h1>
+    <form id="vaultForm">
+        <div class="form-section">
+            <h3>Personal Information</h3>
+            <label for="fullName">Full Name:</label>
+            <input type="text" id="fullName" placeholder="John Doe">
+            
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="john@example.com">
+            
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" placeholder="+1-555-0123">
+        </div>
+
+        <div class="form-section">
+            <h3>Professional Information</h3>
+            <label for="currentTitle">Current Position/Title:</label>
+            <input type="text" id="currentTitle" placeholder="Senior Software Engineer">
+            
+            <label for="company">Company:</label>
+            <input type="text" id="company" placeholder="Tech Corp Inc.">
+            
+            <label for="yearsExperience">Years of Experience:</label>
+            <input type="number" id="yearsExperience" placeholder="5">
+        </div>
+
+        <div class="form-section">
+            <h3>Narrative Snippets (For AI Generation)</h3>
+            <label for="careerSummary">Career/Experience Summary (Key facts/achievements):</label>
+            <textarea id="careerSummary" placeholder="• Led project X, saved Y cost. • Proficient in A, B, C."></textarea>
+
+            <label for="personalInterests">Personal Interests (For essay tailoring):</label>
+            <textarea id="personalInterests" placeholder="• Passionate about volunteering. • Interested in history and urban planning."></textarea>
+        </div>
+
+        <button type="submit">Save Data to Vault</button>
+        <div id="status"></div>
+    </form>
+    <script src="vault.js"></script>
+</body>
+</html>

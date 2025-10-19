@@ -1,0 +1,55 @@
+{
+    "personal": {
+      "fullName": "",
+      "email": "",
+      "phone": "",
+      "address": {
+        "street": "",
+        "city": "",
+        "state": "",
+        "zipCode": "",
+        "country": ""
+      },
+      "dateOfBirth": "",
+      "emergencyContact": ""
+    },
+    "professional": {
+      "currentTitle": "",
+      "company": "",
+      "industry": "",
+      "yearsExperience": 0,
+      "skills": [],
+      "education": [
+        {
+          "institution": "",
+          "degree": "",
+          "field": "",
+          "years": "",
+          "gpa": ""
+        }
+      ],
+      "workExperience": [
+        {
+          "company": "",
+          "title": "",
+          "startDate": "",
+          "endDate": "",
+          "responsibilities": [],
+          "achievements": []
+        }
+      ],
+      "certifications": []
+    },
+    "narratives": {
+      "careerObjective": "",
+      "professionalSummary": "",
+      "keyAchievements": [],
+      "personalInterests": []
+    },
+    "preferences": {
+      "tone": "professional",
+      "writingStyle": "concise",
+      "autoTranslate": false,
+      "validationStrictness": "medium"
+    }
+  }
