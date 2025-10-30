@@ -3,14 +3,120 @@
 <head>
     <title>EnderAI Popup</title>
     <style>
-        body { width: 300px; padding: 10px; font-family: sans-serif; }
-        h2 { color: #3b5998; }
+        body {
+            width: 320px;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        h2 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        p {
+            margin: 0 0 20px 0;
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        .toggle-label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .toggle-switch.active {
+            background: #10b981;
+        }
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(20px);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
+        }
+        .status {
+            margin-top: 15px;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            text-align: center;
+            opacity: 0.8;
+        }
+        .status.active {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+        .status.inactive {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
     </style>
 </head>
 <body>
-    <h2>EnderAI is ready to launch!</h2>
-    <p>Click the button below to open your Data Vault.</p>
-    <button id="vaultBtn">Open Data Vault</button>
+    <div class="container">
+        <h2>🚀 EnderAI Active</h2>
+        <p>Intelligent form filling powered by Gemini AI</p>
+
+        <div class="toggle-container">
+            <span class="toggle-label">Form Scanning</span>
+            <div class="toggle-switch" id="scanToggle">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+
+        <button id="vaultBtn">📁 Open Data Vault</button>
+
+        <div class="status" id="status">Scanning: Disabled</div>
+    </div>
     <script src="popup.js"></script>
 </body>
 </html>

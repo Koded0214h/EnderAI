@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AetherForm Assistant Test - University Admission Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #3b5998;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        .form-section {
+            margin: 25px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #3b5998;
+        }
+        .instructions {
+            background: #e7f3ff;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin: 10px 0;
+            border-left: 4px solid #2196F3;
+        }
+    </style>
+</head>
+<body>
+    <!-- ADD FORM ELEMENT HERE -->
+    <form id="universityApplicationForm">
+        <div class="container">
+            <h1>University Admission Application</h1>
+
+            <div class="instructions">
+                <strong>🧪 AetherForm Assistant Test:</strong> This form demonstrates the extension's capabilities. 
+                The extension should automatically detect fields and provide AI assistance.
+            </div>
+
+            <div class="form-section">
+                <h3>Personal Information</h3>
+                
+                <label for="full_name_input">Full Name</label>
+                <input type="text" id="full_name_input" name="full_name_input" placeholder="Your full legal name">
+                
+                <label for="email_address">Email Address</label>
+                <input type="email" id="email_address" name="email_address" placeholder="your.email@example.com">
+                
+                <label for="phone_number">Phone Number</label>
+                <input type="tel" id="phone_number" name="phone_number" placeholder="+1-555-0123">
+            </div>
+
+            <div class="form-section">
+                <h3>Academic Background</h3>
+                
+                <label for="current_title">Current Position/Title</label>
+                <input type="text" id="current_title" name="current_title" placeholder="e.g., Student, Software Engineer, etc.">
+                
+                <label for="years_experience">Years of Experience</label>
+                <input type="text" id="years_experience" name="years_experience" placeholder="Number of years in your field">
+                
+                <label for="key_skills">Key Skills & Competencies</label>
+                <input type="text" id="key_skills" name="key_skills" placeholder="List your main skills separated by commas">
+            </div>
+
+            <div class="form-section">
+                <h3>Personal Statement</h3>
+                
+                <div class="instructions">
+                    <strong>AI Assistant Feature:</strong> The extension should inject a "Generate with AI" button below this textarea.
+                    Click it to see AI-generated content based on your vault data.
+                </div>
+
+                <label for="essay_prompt">Personal Statement (Max 500 words)</label>
+                <p style="font-size: 0.9em; color: #666;">
+                    <strong>Prompt:</strong> Describe an experience where you applied your technical skills to solve a non-technical community problem. How did this experience shape your views on technology's role in society?
+                </p>
+                <textarea id="essay_prompt" name="essay_prompt" placeholder="Start typing your essay here..." maxlength="500"></textarea>
+            </div>
+
+            <div class="form-section">
+                <h3>Additional Information</h3>
+                
+                <label for="career_goals">Career Goals and Aspirations</label>
+                <textarea id="career_goals" name="career_goals" placeholder="Describe your short-term and long-term career goals..."></textarea>
+                
+                <label for="why_program">Why This Program?</label>
+                <textarea id="why_program" name="why_program" placeholder="Explain why you're interested in this specific program..."></textarea>
+            </div>
+
+            <button type="submit" style="margin-top: 20px; padding: 12px 30px; background-color: #3b5998; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
+                Submit Application
+            </button>
+        </div>
+    </form>
+
+    <script>
+        // Simple form validation for demonstration
+        document.querySelector('button[type="submit"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Form submission simulated. In a real application, this would submit the form data.');
+        });
+    </script>
+</body>
+</html>

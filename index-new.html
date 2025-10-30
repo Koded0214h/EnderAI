@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EnderAI Test Form - Scholarship Application</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            font-size: 16px;
+        }
+        .form-content {
+            padding: 40px;
+        }
+        .form-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+        .form-section h3 {
+            margin: 0 0 20px 0;
+            color: #1e293b;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #374151;
+            font-size: 14px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        .field-hint {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+            font-style: italic;
+        }
+        .ai-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+        .test-notice {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .test-notice strong {
+            color: #92400e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Scholarship Application</h1>
+            <p>Test EnderAI's intelligent form filling and AI generation capabilities</p>
+        </div>
+
+        <div class="form-content">
+            <div class="test-notice">
+                <strong>🧪 EnderAI Test Environment:</strong> This form is designed to test the extension's AI-powered autofill and narrative generation features. Make sure EnderAI is enabled in your browser!
+            </div>
+
+            <form id="scholarshipForm">
+                <!-- Personal Information Section -->
+                <div class="form-section">
+                    <h3>👤 Personal Information</h3>
+
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" placeholder="Enter your full legal name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" placeholder="your.email@university.edu">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567">
+                    </div>
+                </div>
+
+                <!-- Academic & Professional Section -->
+                <div class="form-section">
+                    <h3>🎓 Academic & Professional Background</h3>
+
+                    <div class="form-group">
+                        <label for="currentPosition">Current Position/Title</label>
+                        <input type="text" id="currentPosition" name="currentPosition" placeholder="e.g., Junior at XYZ University, Software Engineer">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="yearsExperience">Years of Professional Experience</label>
+                        <input type="text" id="yearsExperience" name="yearsExperience" placeholder="Enter number of years">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="keySkills">Key Skills & Competencies</label>
+                        <input type="text" id="keySkills" name="keySkills" placeholder="List your main skills (e.g., JavaScript, Python, Leadership)">
+                    </div>
+                </div>
+
+                <!-- Personal Statement Section -->
+                <div class="form-section">
+                    <h3>✍️ Personal Statement <span class="ai-badge">AI Generation</span></h3>
+                    <p style="color: #6b7280; margin-bottom: 20px; line-height: 1.6;">
+                        <strong>Prompt:</strong> Describe a significant experience where you applied your technical skills to address a community challenge.
+                        How did this experience influence your perspective on technology's role in society? (Maximum 500 words)
+                    </p>
+
+                    <div class="form-group">
+                        <textarea id="personalStatement" name="personalStatement" placeholder="Share your personal story and insights..." maxlength="500"></textarea>
+                        <div class="field-hint">💡 EnderAI will generate personalized content based on your vault data when you click the "Generate with Gemini" button</div>
+                    </div>
+                </div>
+
+                <!-- Career Goals Section -->
+                <div class="form-section">
+                    <h3>🎯 Career Goals & Aspirations <span class="ai-badge">AI Generation</span></h3>
+
+                    <div class="form-group">
+                        <label for="careerGoals">Short-term and Long-term Career Goals</label>
+                        <textarea id="careerGoals" name="careerGoals" placeholder="Describe your professional aspirations and how this scholarship will help you achieve them..."></textarea>
+                        <div class="field-hint">💡 AI will craft compelling career objectives based on your professional background</div>
+                    </div>
+                </div>
+
+                <!-- Program Interest Section -->
+                <div class="form-section">
+                    <h3>🎓 Why This Program? <span class="ai-badge">AI Generation</span></h3>
+
+                    <div class="form-group">
+                        <label for="programInterest">Why are you interested in this specific program?</label>
+                        <textarea id="programInterest" name="programInterest" placeholder="Explain what attracts you to this program and how it aligns with your goals..."></textarea>
+                        <div class="field-hint">💡 AI will generate tailored responses highlighting your interests and program fit</div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">
+                    🚀 Submit Scholarship Application
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Form submission handler
+        document.getElementById('scholarshipForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Simple validation
+            const requiredFields = ['fullName', 'email', 'personalStatement'];
+            let isValid = true;
+
+            requiredFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#ef4444';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#10b981';
+                }
+            });
+
+            if (isValid) {
+                alert('🎉 Scholarship application submitted successfully!\n\nEnderAI has helped streamline your application process with intelligent autofill and AI-generated content.');
+            } else {
+                alert('⚠️ Please fill in all required fields (marked in red).');
+            }
+        });
+
+        // Real-time validation feedback
+        document.querySelectorAll('input, textarea').forEach(field => {
+            field.addEventListener('input', function() {
+                if (this.value.trim()) {
+                    this.style.borderColor = '#10b981';
+                } else {
+                    this.style.borderColor = '#e2e8f0';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

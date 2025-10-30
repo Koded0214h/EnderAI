@@ -327,6 +327,7 @@ class FormScanner {
     constructor() {
         this.vaultData = null;
         this.isScanning = false;
+        this.scanningEnabled = false;
         this.fieldDetector = new FieldDetector();
         this.validator = new FormValidator();
         this.init();
@@ -334,9 +335,21 @@ class FormScanner {
 
     async init() {
         await this.loadVaultData();
+        await this.loadScanningState();
         this.startObserving();
-        this.scanExistingForms();
+        if (this.scanningEnabled) {
+            this.scanExistingForms();
+        }
         console.log('AetherForm Assistant: Form scanner initialized');
+    }
+
+    async loadScanningState() {
+        return new Promise((resolve) => {
+            chrome.storage.local.get(['enderAIScanEnabled'], (result) => {
+                this.scanningEnabled = result.enderAIScanEnabled || false;
+                resolve();
+            });
+        });
     }
 
     async loadVaultData() {
@@ -350,6 +363,8 @@ class FormScanner {
 
     startObserving() {
         const observer = new MutationObserver((mutations) => {
+            if (!this.scanningEnabled) return;
+
             mutations.forEach((mutation) => {
                 mutation.addedNodes.forEach((node) => {
                     if (node.nodeType === 1) {
@@ -364,6 +379,16 @@ class FormScanner {
         observer.observe(document.body, {
             childList: true,
             subtree: true
+        });
+
+        // Listen for toggle messages from popup
+        chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+            if (request.action === 'TOGGLE_SCANNING') {
+                this.scanningEnabled = request.enabled;
+                if (this.scanningEnabled) {
+                    this.scanExistingForms();
+                }
+            }
         });
     }
 
@@ -438,7 +463,11 @@ class FormScanner {
         }
 
         // Add special handlers for narrative fields
-        if (field.detection.fieldType === 'personalStatement' && field.tagName === 'TEXTAREA') {
+        if ((field.detection.fieldType === 'personalStatement' ||
+             field.detection.fieldType === 'motivation' ||
+             field.detection.fieldType === 'careerGoals' ||
+             field.detection.fieldType === 'programInterest') &&
+            field.tagName === 'TEXTAREA') {
             this.addNarrativeAssistant(field.element, field.context);
         }
 
@@ -489,61 +518,77 @@ class FormScanner {
 
     addNarrativeAssistant(textarea, context) {
         // Check if assistant already exists
-        if (textarea.parentNode.querySelector('.aether-narrative-assistant')) {
+        if (textarea.parentNode.querySelector('.ender-ai-narrative-assistant')) {
             return;
         }
 
         const assistantBtn = document.createElement('button');
-        assistantBtn.textContent = '🪄 Generate with AI';
-        assistantBtn.className = 'aether-narrative-assistant';
+        assistantBtn.textContent = '🪄 Generate with Gemini';
+        assistantBtn.className = 'ender-ai-narrative-assistant';
         assistantBtn.style.cssText = `
             position: absolute;
-            right: 5px;
-            top: 5px;
-            background: #4F46E5;
+            right: 8px;
+            top: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
+            padding: 8px 16px;
+            border-radius: 8px;
             font-size: 12px;
             cursor: pointer;
             z-index: 1000;
-            font-weight: 500;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: all 0.2s ease;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         `;
 
         // Hover effects
         assistantBtn.onmouseenter = () => {
-            assistantBtn.style.background = '#3730A3';
-            assistantBtn.style.transform = 'translateY(-1px)';
+            assistantBtn.style.background = 'linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%)';
+            assistantBtn.style.transform = 'translateY(-2px)';
+            assistantBtn.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.4)';
         };
         assistantBtn.onmouseleave = () => {
-            assistantBtn.style.background = '#4F46E5';
+            assistantBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
             assistantBtn.style.transform = 'translateY(0)';
+            assistantBtn.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.3)';
         };
 
         assistantBtn.onclick = async (e) => {
             e.preventDefault();
             e.stopPropagation();
-            
+
             assistantBtn.textContent = '✨ Generating...';
             assistantBtn.disabled = true;
-            
+            assistantBtn.style.opacity = '0.7';
+
             try {
                 const narrative = await this.generateNarrativeForField(textarea, context);
                 if (narrative) {
                     textarea.value = narrative;
                     textarea.dispatchEvent(new Event('input', { bubbles: true }));
                     this.highlightField(textarea, 'ai-generated');
-                    console.log('AetherForm Assistant: Generated narrative content');
+                    console.log('EnderAI: Generated narrative content with Gemini');
+
+                    // Show success feedback
+                    assistantBtn.textContent = '✅ Generated!';
+                    setTimeout(() => {
+                        assistantBtn.textContent = '🪄 Generate with Gemini';
+                        assistantBtn.disabled = false;
+                        assistantBtn.style.opacity = '1';
+                    }, 1500);
                 }
             } catch (error) {
-                console.error('AetherForm Assistant: Narrative generation failed', error);
-                alert('Failed to generate content. Please check your vault data and try again.');
-            } finally {
-                assistantBtn.textContent = '🪄 Generate with AI';
-                assistantBtn.disabled = false;
+                console.error('EnderAI: Narrative generation failed', error);
+                assistantBtn.textContent = '❌ Failed';
+                assistantBtn.style.background = 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)';
+                setTimeout(() => {
+                    assistantBtn.textContent = '🪄 Generate with Gemini';
+                    assistantBtn.disabled = false;
+                    assistantBtn.style.opacity = '1';
+                    assistantBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+                }, 2000);
             }
         };
 
@@ -552,10 +597,25 @@ class FormScanner {
     }
 
     async generateNarrativeForField(textarea, context) {
-        const outline = this.vaultData.narratives?.professionalSummary || 
-                       this.vaultData.narratives?.careerObjective || 
-                       'Experienced professional seeking new opportunities';
-        
+        // Determine what type of narrative to generate based on context
+        let outline = this.vaultData.narratives?.professionalSummary ||
+                     this.vaultData.narratives?.careerObjective ||
+                     'Experienced professional seeking new opportunities';
+
+        const lowerContext = context.toLowerCase();
+
+        // Customize outline based on field type
+        if (lowerContext.includes('career goals') || lowerContext.includes('career aspirations')) {
+            outline = this.vaultData.narratives?.professionalSummary ||
+                     'Professional with strong technical background and leadership experience';
+        } else if (lowerContext.includes('why this program') || lowerContext.includes('why this school')) {
+            outline = this.vaultData.narratives?.personalInterests ||
+                     'Passionate about technology and its impact on society';
+        } else if (lowerContext.includes('personal statement') || lowerContext.includes('essay')) {
+            outline = this.vaultData.narratives?.professionalSummary + ' ' +
+                     (this.vaultData.narratives?.personalInterests || '');
+        }
+
         const narrative = await this.sendMessage('GENERATE_NARRATIVE', {
             config: {
                 outline: outline,
@@ -583,39 +643,51 @@ class FormScanner {
 
     addValidationUI(form) {
         // Check if validation button already exists
-        if (form.querySelector('.aether-validate-btn')) {
+        if (form.querySelector('.ender-ai-validate-btn')) {
             return;
         }
 
         const validateBtn = document.createElement('button');
-        validateBtn.textContent = '✓ Validate Entire Form';
-        validateBtn.className = 'aether-validate-btn';
+        validateBtn.textContent = '✅ Validate Form';
+        validateBtn.className = 'ender-ai-validate-btn';
         validateBtn.type = 'button';
         validateBtn.style.cssText = `
-            background: #10B981;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
+            padding: 14px 28px;
+            border-radius: 10px;
             cursor: pointer;
-            margin: 20px 0;
-            font-weight: bold;
+            margin: 24px 0;
+            font-weight: 600;
             font-size: 14px;
-            transition: all 0.2s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: block;
+            width: 100%;
+            max-width: 200px;
         `;
 
         validateBtn.onmouseenter = () => {
-            validateBtn.style.background = '#059669';
-            validateBtn.style.transform = 'translateY(-1px)';
+            validateBtn.style.background = 'linear-gradient(135deg, #059669 0%, #047857 100%)';
+            validateBtn.style.transform = 'translateY(-2px)';
+            validateBtn.style.boxShadow = '0 6px 20px rgba(16, 185, 129, 0.4)';
         };
         validateBtn.onmouseleave = () => {
-            validateBtn.style.background = '#10B981';
+            validateBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
             validateBtn.style.transform = 'translateY(0)';
+            validateBtn.style.boxShadow = '0 4px 15px rgba(16, 185, 129, 0.3)';
         };
 
         validateBtn.onclick = async () => {
+            validateBtn.textContent = '🔍 Validating...';
+            validateBtn.disabled = true;
+
             await this.validateEntireForm(form);
+
+            validateBtn.textContent = '✅ Validate Form';
+            validateBtn.disabled = false;
         };
 
         form.appendChild(validateBtn);
@@ -623,27 +695,35 @@ class FormScanner {
 
     addAetherAssistantUI(form) {
         // Check if assistant UI already exists
-        if (form.parentNode.querySelector('.aether-assistant-header')) {
+        if (form.parentNode.querySelector('.ender-ai-assistant-header')) {
             return;
         }
 
         const assistantDiv = document.createElement('div');
-        assistantDiv.className = 'aether-assistant-header';
+        assistantDiv.className = 'ender-ai-assistant-header';
         assistantDiv.style.cssText = `
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
             text-align: center;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
         `;
 
         assistantDiv.innerHTML = `
-            <div style="font-weight: bold; font-size: 16px; margin-bottom: 8px;">
-                🚀 AetherForm Assistant Active
-            </div>
-            <div style="font-size: 12px; opacity: 0.9;">
-                AI-powered autofill • Smart validation • Content generation
+            <div style="position: relative; z-index: 1;">
+                <div style="font-weight: 700; font-size: 18px; margin-bottom: 8px; display: flex; align-items: center; justify-content: center;">
+                    🚀 <span style="margin-left: 8px;">EnderAI Active</span>
+                </div>
+                <div style="font-size: 14px; opacity: 0.9; line-height: 1.4;">
+                    <span style="display: inline-block; margin: 0 8px; padding: 4px 8px; background: rgba(255,255,255,0.2); border-radius: 12px; font-size: 12px;">🤖 Gemini AI</span>
+                    <span style="display: inline-block; margin: 0 8px; padding: 4px 8px; background: rgba(255,255,255,0.2); border-radius: 12px; font-size: 12px;">📝 Smart Fill</span>
+                    <span style="display: inline-block; margin: 0 8px; padding: 4px 8px; background: rgba(255,255,255,0.2); border-radius: 12px; font-size: 12px;">✅ Validation</span>
+                </div>
             </div>
         `;
 
@@ -679,53 +759,57 @@ class FormScanner {
 
     showValidationResults(hasErrors, errors) {
         const overlay = document.createElement('div');
-        overlay.className = 'aether-validation-overlay';
+        overlay.className = 'ender-ai-validation-overlay';
         overlay.style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
-            background: white;
-            border: 2px solid ${hasErrors ? '#DC2626' : '#10B981'};
-            border-radius: 12px;
-            padding: 20px;
-            max-width: 400px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid ${hasErrors ? '#ef4444' : '#10b981'};
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 420px;
             max-height: 500px;
             overflow-y: auto;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
             z-index: 10000;
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            backdrop-filter: blur(10px);
         `;
 
         let html = `
-            <div style="display: flex; align-items: center; margin-bottom: 16px;">
-                <div style="font-size: 24px; margin-right: 12px;">
+            <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                <div style="font-size: 28px; margin-right: 16px;">
                     ${hasErrors ? '❌' : '✅'}
                 </div>
-                <h3 style="margin: 0; color: ${hasErrors ? '#DC2626' : '#10B981'};">
-                    Form Validation ${hasErrors ? 'Failed' : 'Passed'}
-                </h3>
+                <div>
+                    <h3 style="margin: 0 0 4px 0; color: ${hasErrors ? '#ef4444' : '#10b981'}; font-size: 18px; font-weight: 700;">
+                        Validation ${hasErrors ? 'Failed' : 'Passed'}
+                    </h3>
+                    <div style="font-size: 12px; color: #6b7280;">EnderAI Form Check</div>
+                </div>
             </div>
         `;
 
         if (hasErrors && errors.length > 0) {
-            html += '<div style="color: #DC2626; font-weight: bold; margin-bottom: 12px;">Issues found:</div><ul style="margin: 0; padding-left: 20px;">';
+            html += '<div style="color: #ef4444; font-weight: 600; margin-bottom: 16px; font-size: 14px;">Issues found:</div><ul style="margin: 0; padding-left: 20px;">';
             errors.forEach(error => {
-                html += `<li style="margin-bottom: 8px; color: #374151;">${error.message}</li>`;
+                html += `<li style="margin-bottom: 10px; color: #374151; line-height: 1.4; font-size: 14px;">${error.message}</li>`;
             });
             html += '</ul>';
         } else if (!hasErrors) {
-            html += '<div style="color: #10B981; font-weight: bold;">All checks passed! Your form is ready to submit.</div>';
+            html += '<div style="color: #10b981; font-weight: 600; font-size: 14px;">🎉 All checks passed! Your form is ready to submit.</div>';
         }
 
         overlay.innerHTML = html;
         document.body.appendChild(overlay);
 
-        // Auto-remove after 8 seconds
+        // Auto-remove after 10 seconds
         setTimeout(() => {
             if (overlay.parentNode) {
                 overlay.parentNode.removeChild(overlay);
             }
-        }, 8000);
+        }, 10000);
 
         // Also allow clicking to dismiss
         overlay.onclick = () => overlay.remove();

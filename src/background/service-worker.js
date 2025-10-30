@@ -21,14 +21,26 @@ class AetherFormAI {
     // Layer 2: Contextual Writing & Tailoring
     async generateNarrative(promptConfig) {
         const { outline, context, tone, characterLimit } = promptConfig;
-        
-        // Simulate AI generation - replace with actual AI API calls
-        return this.simulateNarrativeGeneration(outline, context, tone, characterLimit);
+
+        try {
+            const prompt = this.buildNarrativePrompt(outline, context, tone, characterLimit);
+            const response = await this.callGeminiAPI(prompt);
+            return this.processGeminiResponse(response, characterLimit);
+        } catch (error) {
+            console.error('Gemini API error:', error);
+            return this.fallbackNarrativeGeneration(outline, context, tone, characterLimit);
+        }
     }
 
     async rewriteContent(content, newTone, characterLimit) {
-        // Simulate content rewriting
-        return this.simulateContentRewriting(content, newTone, characterLimit);
+        try {
+            const prompt = this.buildRewritePrompt(content, newTone, characterLimit);
+            const response = await this.callGeminiAPI(prompt);
+            return this.processGeminiResponse(response, characterLimit);
+        } catch (error) {
+            console.error('Gemini API error:', error);
+            return this.fallbackContentRewriting(content, newTone, characterLimit);
+        }
     }
 
     // Layer 3: Compliance & Consistency Checking
@@ -63,30 +75,112 @@ class AetherFormAI {
         return 'other';
     }
 
-    simulateNarrativeGeneration(outline, context, tone, characterLimit) {
+    // Gemini API Integration
+    async callGeminiAPI(prompt) {
+        const API_KEY = 'AIzaSyAqv_qyqKXecPHlreWgTHWGUVjeUNtx76o';
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`;
+
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{
+                        text: prompt
+                    }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    topK: 40,
+                    topP: 0.95,
+                    maxOutputTokens: 1024,
+                }
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`Gemini API error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        return data;
+    }
+
+    buildNarrativePrompt(outline, context, tone, characterLimit) {
+        const limitText = characterLimit ? ` Keep your response under ${characterLimit} characters.` : '';
+        return `Write a ${tone} narrative response for a form field. Context: ${context}. Use this information about the person: ${outline}. Make it personal and authentic. Only provide the response text itself, no introductions, headers, or explanations.${limitText}`;
+    }
+
+    buildRewritePrompt(content, newTone, characterLimit) {
+        const limitText = characterLimit ? ` Keep your response under ${characterLimit} characters.` : '';
+        return `Rewrite the following text in a ${newTone} tone: "${content}".${limitText}`;
+    }
+
+    processGeminiResponse(response, characterLimit) {
+        try {
+            const text = response.candidates[0].content.parts[0].text;
+            let processed = text.trim();
+
+            // Remove any introductory text like "Okay, here's a draft response..."
+            const introPatterns = [
+                /^Okay, here's a draft response.*?:\s*/i,
+                /^Here's a draft.*?:\s*/i,
+                /^Here's a response.*?:\s*/i,
+                /^Here's an example.*?:\s*/i,
+                /^Let me provide.*?:\s*/i,
+                /^Based on the information.*?:\s*/i,
+                /^\*\*.*?\*\*\s*/i,  // Remove markdown headers
+                /^Career Goals.*?:\s*/i,
+                /^Personal Statement.*?:\s*/i,
+                /^Response.*?:\s*/i
+            ];
+
+            introPatterns.forEach(pattern => {
+                processed = processed.replace(pattern, '');
+            });
+
+            // Clean up any remaining formatting
+            processed = processed.replace(/^\s*[\*\-\•]\s*/gm, ''); // Remove bullet points
+            processed = processed.replace(/\n{3,}/g, '\n\n'); // Limit consecutive newlines
+            processed = processed.trim();
+
+            if (characterLimit && processed.length > characterLimit) {
+                processed = processed.substring(0, characterLimit - 3) + '...';
+            }
+
+            return processed;
+        } catch (error) {
+            console.error('Error processing Gemini response:', error);
+            throw new Error('Failed to process AI response');
+        }
+    }
+
+    // Fallback methods (simplified versions for when API fails)
+    fallbackNarrativeGeneration(outline, context, tone, characterLimit) {
         const templates = {
-            professional: `Based on my experience as outlined in ${outline}, I have developed strong capabilities in this area. My background has provided me with comprehensive understanding and practical skills that I believe align well with the requirements. I am confident in my ability to contribute effectively and am excited about the opportunity to apply my expertise in a meaningful context.`,
-            academic: `Throughout my academic and professional journey as described in ${outline}, I have cultivated a deep interest in this field. The experiences I've gained have not only strengthened my technical abilities but also enhanced my critical thinking and problem-solving skills. I am eager to leverage this foundation to make valuable contributions and continue growing in this area.`,
-            casual: `My experience with ${outline} has given me hands-on understanding of these concepts. I've enjoyed applying these skills in practical settings and am looking forward to new opportunities where I can continue developing my capabilities while making a positive impact.`
+            professional: `Based on my experience as outlined in ${outline}, I have developed strong capabilities in this area. My background has provided me with comprehensive understanding and practical skills that I believe align well with the requirements.`,
+            academic: `Throughout my academic and professional journey as described in ${outline}, I have cultivated a deep interest in this field. The experiences I've gained have strengthened my technical abilities and critical thinking skills.`,
+            casual: `My experience with ${outline} has given me hands-on understanding of these concepts. I've enjoyed applying these skills and am looking forward to new opportunities.`
         };
 
         let narrative = templates[tone] || templates.professional;
-        
+
         if (characterLimit && narrative.length > characterLimit) {
             narrative = narrative.substring(0, characterLimit - 3) + '...';
         }
-        
+
         return narrative;
     }
 
-    simulateContentRewriting(content, newTone, characterLimit) {
-        // Simple simulation - just return the content as-is
+    fallbackContentRewriting(content, newTone, characterLimit) {
         let rewritten = content;
-        
+
         if (characterLimit && rewritten.length > characterLimit) {
             rewritten = rewritten.substring(0, characterLimit - 3) + '...';
         }
-        
+
         return rewritten;
     }
 }

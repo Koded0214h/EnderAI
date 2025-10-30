@@ -35,13 +35,23 @@ class FieldDetector {
     }
 
     detectAmbiguousField(context) {
-        // Simple heuristic fallback - in real implementation, this would use AI
-        if (context.includes('essay') || context.includes('statement') || context.includes('describe')) {
+        const lowerContext = context.toLowerCase();
+
+        // Enhanced detection for different form types
+        if (lowerContext.includes('personal statement') || lowerContext.includes('essay') || lowerContext.includes('statement') || lowerContext.includes('describe')) {
             return { category: 'narrative', fieldType: 'personalStatement', confidence: 'medium' };
         }
-        
-        if (context.includes('why') || context.includes('purpose') || context.includes('reason')) {
+
+        if (lowerContext.includes('why') || lowerContext.includes('purpose') || lowerContext.includes('reason') || lowerContext.includes('motivation')) {
             return { category: 'narrative', fieldType: 'motivation', confidence: 'medium' };
+        }
+
+        if (lowerContext.includes('career goals') || lowerContext.includes('career aspirations') || lowerContext.includes('professional goals')) {
+            return { category: 'narrative', fieldType: 'careerGoals', confidence: 'medium' };
+        }
+
+        if (lowerContext.includes('why this program') || lowerContext.includes('why this school') || lowerContext.includes('why this university')) {
+            return { category: 'narrative', fieldType: 'programInterest', confidence: 'medium' };
         }
 
         return { category: 'other', fieldType: 'unknown', confidence: 'low' };
