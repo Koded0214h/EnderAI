@@ -64,6 +64,21 @@ class AetherFormAI {
         return label; // Simple fallback - implement translation in production
     }
 
+    // API Key Management
+    async getStoredApiKey() {
+        return new Promise((resolve) => {
+            chrome.storage.local.get(['geminiApiKey'], (result) => {
+                resolve(result.geminiApiKey || null);
+            });
+        });
+    }
+
+    async setStoredApiKey(apiKey) {
+        return new Promise((resolve) => {
+            chrome.storage.local.set({ geminiApiKey: apiKey }, resolve);
+        });
+    }
+
     // Simulation methods (replace with real AI)
     fallbackFieldDetection(context) {
         const lowerContext = context.toLowerCase();
@@ -77,7 +92,18 @@ class AetherFormAI {
 
     // Gemini API Integration
     async callGeminiAPI(prompt) {
-        const API_KEY = 'AIzaSyAqv_qyqKXecPHlreWgTHWGUVjeUNtx76o';
+        // Load API key from environment or fallback to stored config
+        let API_KEY = process?.env?.GEMINI_API_KEY;
+
+        // If not available in environment, try to get from chrome storage (for production)
+        if (!API_KEY) {
+            API_KEY = await this.getStoredApiKey();
+        }
+
+        if (!API_KEY) {
+            throw new Error('Gemini API key not configured. Please set GEMINI_API_KEY in your environment or configure it in the extension settings.');
+        }
+
         const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`;
 
         const response = await fetch(API_URL, {
@@ -221,6 +247,14 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             await aetherAI.storageManager.saveVaultData(request.vaultData);
             aetherAI.vaultData = request.vaultData;
             return { success: true };
+        },
+        'SET_API_KEY': async () => {
+            await aetherAI.setStoredApiKey(request.apiKey);
+            return { success: true };
+        },
+        'GET_API_KEY': async () => {
+            const apiKey = await aetherAI.getStoredApiKey();
+            return { apiKey };
         }
     };
 

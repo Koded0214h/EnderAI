@@ -281,6 +281,20 @@
             <button type="submit">💾 Save Data to Vault</button>
             <div id="status"></div>
         </form>
+
+        <!-- API Configuration Section -->
+        <div class="form-section" style="margin-top: 30px; border-left-color: #ff6b6b;">
+            <h3>🔑 API Configuration</h3>
+            <div class="form-group">
+                <label for="geminiApiKey">Gemini AI API Key:</label>
+                <input type="password" id="geminiApiKey" placeholder="Enter your Gemini API key">
+                <div style="font-size: 12px; color: #6b7280; margin-top: 4px;">
+                    💡 Get your API key from <a href="https://makersuite.google.com/app/apikey" target="_blank" style="color: #667eea;">Google AI Studio</a>
+                </div>
+            </div>
+            <button type="button" id="saveApiKey" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%); margin-top: 15px;">Save API Key</button>
+            <div id="apiStatus"></div>
+        </div>
     </div>
     <script src="vault.js"></script>
 </body>

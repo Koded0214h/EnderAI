@@ -1,1 +1,15 @@
 .obsidian/
+.env
+.env.local
+.env.production
+.env.development
+config.js
+secrets.js
+*.key
+*.pem
+node_modules/
+dist/
+build/
+*.log
+.DS_Store
+Thumbs.db

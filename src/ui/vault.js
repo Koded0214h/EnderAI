@@ -98,3 +98,49 @@ document.querySelectorAll('input, textarea').forEach(field => {
 });
 
 document.addEventListener('DOMContentLoaded', restoreOptions);
+
+// API Key management
+document.getElementById('saveApiKey').addEventListener('click', saveApiKey);
+
+async function saveApiKey() {
+    const apiKey = document.getElementById('geminiApiKey').value.trim();
+    const statusDiv = document.getElementById('apiStatus');
+
+    if (!apiKey) {
+        showStatus('Please enter an API key', 'error', statusDiv);
+        return;
+    }
+
+    try {
+        // Send message to background script to save API key
+        const response = await chrome.runtime.sendMessage({
+            action: 'SET_API_KEY',
+            apiKey: apiKey
+        });
+
+        if (response.success) {
+            showStatus('API key saved successfully!', 'success', statusDiv);
+            document.getElementById('geminiApiKey').value = '';
+        } else {
+            showStatus('Failed to save API key', 'error', statusDiv);
+        }
+    } catch (error) {
+        console.error('Error saving API key:', error);
+        showStatus('Error saving API key', 'error', statusDiv);
+    }
+}
+
+// Enhanced status display for API section
+function showStatus(message, type, targetDiv = statusDiv) {
+    targetDiv.textContent = message;
+    targetDiv.className = `show ${type}`;
+    targetDiv.style.opacity = '1';
+
+    setTimeout(() => {
+        targetDiv.style.opacity = '0';
+        setTimeout(() => {
+            targetDiv.className = '';
+            targetDiv.textContent = '';
+        }, 300);
+    }, 3000);
+}
