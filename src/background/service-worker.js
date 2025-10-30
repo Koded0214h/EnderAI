@@ -289,12 +289,78 @@ chrome.runtime.onInstalled.addListener(() => {
         }
     };
 
-    // Set default vault data if none exists
+    // Set enhanced default vault data if none exists
     chrome.storage.local.get(['aetherFormVault'], (result) => {
         if (!result.aetherFormVault) {
-            chrome.storage.local.set({ aetherFormVault: defaultVault }, () => {
-                console.log('AetherForm: Default vault data initialized');
-            });
+            // Try to load enhanced vault template
+            fetch(chrome.runtime.getURL('src/data/enhanced-vault.json'))
+                .then(response => response.json())
+                .then(enhancedVault => {
+                    // Merge with sample data
+                    const mergedVault = { ...enhancedVault };
+                    // Add sample data to key fields
+                    mergedVault.personal = {
+                        ...mergedVault.personal,
+                        fullName: "John Smith",
+                        email: "john.smith@example.com",
+                        phone: "+1-555-0123",
+                        address: {
+                            ...mergedVault.personal.address,
+                            street: "123 Main Street",
+                            city: "San Francisco",
+                            state: "CA",
+                            zipCode: "94105",
+                            country: "USA"
+                        }
+                    };
+                    mergedVault.professional = {
+                        ...mergedVault.professional,
+                        currentTitle: "Senior Software Engineer",
+                        company: "Tech Innovations Inc.",
+                        industry: "Technology",
+                        yearsExperience: 8,
+                        skills: ["JavaScript", "Python", "React", "Node.js", "AWS"],
+                        education: [
+                            {
+                                ...mergedVault.professional.education[0],
+                                institution: "Stanford University",
+                                degree: "Bachelor of Science",
+                                field: "Computer Science",
+                                years: "2012-2016",
+                                gpa: "3.8"
+                            }
+                        ],
+                        workExperience: [
+                            {
+                                ...mergedVault.professional.workExperience[0],
+                                company: "Tech Innovations Inc.",
+                                title: "Senior Software Engineer",
+                                startDate: "2020-01-15",
+                                endDate: "Present",
+                                responsibilities: ["Lead development teams", "Architect scalable systems"],
+                                achievements: ["Reduced latency by 40%", "Improved team productivity by 25%"]
+                            }
+                        ]
+                    };
+                    mergedVault.narratives = {
+                        ...mergedVault.narratives,
+                        careerObjective: "Seeking to leverage my technical expertise in software engineering to build innovative solutions that solve real-world problems.",
+                        professionalSummary: "Experienced software engineer with 8+ years in full-stack development, cloud architecture, and team leadership. Passionate about creating efficient, scalable systems and mentoring junior developers.",
+                        keyAchievements: ["Led a team of 10 developers", "Reduced system latency by 40%", "Implemented CI/CD pipelines"],
+                        personalInterests: ["Open source contributions", "Mentoring", "Hiking", "Photography"]
+                    };
+
+                    chrome.storage.local.set({ aetherFormVault: mergedVault }, () => {
+                        console.log('EnderAI: Enhanced vault data initialized with sample data');
+                    });
+                })
+                .catch(error => {
+                    console.error('EnderAI: Failed to load enhanced vault template, using basic template', error);
+                    // Fallback to basic template with sample data
+                    chrome.storage.local.set({ aetherFormVault: defaultVault }, () => {
+                        console.log('EnderAI: Basic vault data initialized');
+                    });
+                });
         }
     });
 });

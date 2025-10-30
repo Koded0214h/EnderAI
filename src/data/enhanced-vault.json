@@ -1,0 +1,356 @@
+{
+  "personal": {
+    "fullName": "",
+    "firstName": "",
+    "lastName": "",
+    "middleName": "",
+    "preferredName": "",
+    "email": "",
+    "emailPersonal": "",
+    "emailWork": "",
+    "emailSchool": "",
+    "phone": "",
+    "phoneHome": "",
+    "phoneMobile": "",
+    "phoneWork": "",
+    "address": {
+      "street": "",
+      "street2": "",
+      "city": "",
+      "state": "",
+      "zipCode": "",
+      "country": "",
+      "fullAddress": ""
+    },
+    "dateOfBirth": "",
+    "age": "",
+    "gender": "",
+    "nationality": "",
+    "ethnicity": "",
+    "maritalStatus": "",
+    "emergencyContact": {
+      "name": "",
+      "relationship": "",
+      "phone": "",
+      "email": ""
+    },
+    "socialSecurity": "",
+    "driversLicense": "",
+    "passportNumber": "",
+    "citizenship": "",
+    "visaStatus": "",
+    "languages": [],
+    "website": "",
+    "linkedin": "",
+    "github": "",
+    "twitter": "",
+    "portfolio": ""
+  },
+  "professional": {
+    "currentTitle": "",
+    "company": "",
+    "industry": "",
+    "department": "",
+    "yearsExperience": 0,
+    "yearsInField": 0,
+    "yearsAtCompany": 0,
+    "employmentStatus": "",
+    "jobLevel": "",
+    "salaryRange": "",
+    "supervisorName": "",
+    "supervisorEmail": "",
+    "supervisorPhone": "",
+    "workAddress": {
+      "street": "",
+      "city": "",
+      "state": "",
+      "zipCode": "",
+      "country": ""
+    },
+    "skills": [],
+    "technicalSkills": [],
+    "softSkills": [],
+    "certifications": [],
+    "licenses": [],
+    "awards": [],
+    "publications": [],
+    "patents": [],
+    "professionalMemberships": [],
+    "education": [
+      {
+        "institution": "",
+        "degree": "",
+        "field": "",
+        "major": "",
+        "minor": "",
+        "years": "",
+        "graduationDate": "",
+        "gpa": "",
+        "honors": "",
+        "thesis": "",
+        "relevantCoursework": []
+      }
+    ],
+    "workExperience": [
+      {
+        "company": "",
+        "title": "",
+        "startDate": "",
+        "endDate": "",
+        "isCurrent": false,
+        "location": "",
+        "employmentType": "",
+        "responsibilities": [],
+        "achievements": [],
+        "technologies": [],
+        "reasonForLeaving": ""
+      }
+    ],
+    "references": [
+      {
+        "name": "",
+        "title": "",
+        "company": "",
+        "email": "",
+        "phone": "",
+        "relationship": ""
+      }
+    ],
+    "salaryHistory": [],
+    "professionalDevelopment": [],
+    "projects": [
+      {
+        "name": "",
+        "description": "",
+        "role": "",
+        "technologies": [],
+        "url": "",
+        "startDate": "",
+        "endDate": ""
+      }
+    ]
+  },
+  "academic": {
+    "studentId": "",
+    "major": "",
+    "minor": "",
+    "expectedGraduation": "",
+    "currentGpa": "",
+    "cumulativeGpa": "",
+    "academicStanding": "",
+    "honors": [],
+    "scholarships": [],
+    "researchInterests": [],
+    "thesisTopic": "",
+    "advisorName": "",
+    "advisorEmail": "",
+    "relevantCoursework": [],
+    "academicAwards": [],
+    "publications": [],
+    "conferences": [],
+    "studyAbroad": {
+      "location": "",
+      "duration": "",
+      "program": "",
+      "courses": []
+    },
+    "extracurriculars": [],
+    "leadershipRoles": [],
+    "volunteerWork": [
+      {
+        "organization": "",
+        "role": "",
+        "description": "",
+        "hours": "",
+        "startDate": "",
+        "endDate": ""
+      }
+    ],
+    "testScores": {
+      "gre": {
+        "verbal": "",
+        "quantitative": "",
+        "writing": "",
+        "date": ""
+      },
+      "gmat": {
+        "total": "",
+        "verbal": "",
+        "quantitative": "",
+        "integratedReasoning": "",
+        "analyticalWriting": "",
+        "date": ""
+      },
+      "toefl": {
+        "total": "",
+        "reading": "",
+        "listening": "",
+        "speaking": "",
+        "writing": "",
+        "date": ""
+      },
+      "ielts": {
+        "overall": "",
+        "reading": "",
+        "listening": "",
+        "speaking": "",
+        "writing": "",
+        "date": ""
+      },
+      "sat": {
+        "total": "",
+        "math": "",
+        "reading": "",
+        "date": ""
+      },
+      "act": {
+        "composite": "",
+        "english": "",
+        "math": "",
+        "reading": "",
+        "science": "",
+        "date": ""
+      }
+    }
+  },
+  "narratives": {
+    "careerObjective": "",
+    "professionalSummary": "",
+    "personalStatement": "",
+    "diversityStatement": "",
+    "researchStatement": "",
+    "teachingStatement": "",
+    "leadershipStatement": "",
+    "keyAchievements": [],
+    "personalInterests": [],
+    "hobbies": [],
+    "motivationLetter": "",
+    "coverLetter": "",
+    "elevatorPitch": "",
+    "professionalBio": "",
+    "shortBio": "",
+    "longBio": "",
+    "linkedinSummary": "",
+    "aboutMe": "",
+    "personalBrand": "",
+    "uniqueValueProposition": "",
+    "careerGoals": "",
+    "fiveYearPlan": "",
+    "whyThisCompany": "",
+    "whyThisProgram": "",
+    "whyThisSchool": "",
+    "whyThisPosition": "",
+    "greatestAchievement": "",
+    "biggestChallenge": "",
+    "futureContribution": "",
+    "researchInterests": "",
+    "teachingPhilosophy": "",
+    "leadershipPhilosophy": "",
+    "workStyle": "",
+    "communicationStyle": "",
+    "conflictResolution": "",
+    "problemSolving": "",
+    "learningStyle": "",
+    "strengths": "",
+    "areasForImprovement": "",
+    "careerHighlights": "",
+    "professionalJourney": "",
+    "personalGrowth": "",
+    "communityImpact": "",
+    "futureVision": ""
+  },
+  "preferences": {
+    "tone": "professional",
+    "writingStyle": "concise",
+    "autoTranslate": false,
+    "validationStrictness": "medium",
+    "defaultLanguage": "en",
+    "timezone": "",
+    "dateFormat": "MM/DD/YYYY",
+    "currency": "USD",
+    "measurementSystem": "imperial",
+    "communicationPreference": "email",
+    "availability": "",
+    "salaryExpectation": "",
+    "relocationWillingness": "",
+    "remoteWorkPreference": "",
+    "travelWillingness": "",
+    "workEnvironment": "",
+    "teamSize": "",
+    "companySize": "",
+    "industryPreference": [],
+    "rolePreferences": [],
+    "excludedIndustries": [],
+    "workLifeBalance": "",
+    "professionalDevelopment": "",
+    "mentorshipInterest": "",
+    "leadershipInterest": "",
+    "entrepreneurshipInterest": ""
+  },
+  "additional": {
+    "emergencyContacts": [],
+    "medicalInfo": {
+      "allergies": [],
+      "medications": [],
+      "conditions": [],
+      "bloodType": "",
+      "organDonor": false
+    },
+    "financialInfo": {
+      "bankName": "",
+      "accountType": "",
+      "routingNumber": "",
+      "accountNumber": "",
+      "creditScore": "",
+      "taxId": ""
+    },
+    "legalInfo": {
+      "driversLicenseNumber": "",
+      "driversLicenseState": "",
+      "driversLicenseExpiration": "",
+      "passportNumber": "",
+      "passportExpiration": "",
+      "passportCountry": "",
+      "visaType": "",
+      "visaExpiration": "",
+      "workAuthorization": "",
+      "criminalRecord": false,
+      "backgroundCheckConsent": false
+    },
+    "demographicInfo": {
+      "race": "",
+      "ethnicity": "",
+      "gender": "",
+      "sexualOrientation": "",
+      "disabilityStatus": "",
+      "veteranStatus": "",
+      "firstGeneration": false,
+      "lowIncome": false
+    },
+    "networking": {
+      "professionalContacts": [],
+      "mentors": [],
+      "alumniContacts": [],
+      "industryContacts": []
+    },
+    "goals": {
+      "shortTerm": [],
+      "mediumTerm": [],
+      "longTerm": [],
+      "personalGoals": [],
+      "professionalGoals": [],
+      "academicGoals": []
+    },
+    "metrics": {
+      "publicationsCount": 0,
+      "citationsCount": 0,
+      "patentsCount": 0,
+      "awardsCount": 0,
+      "conferencePresentations": 0,
+      "grantsReceived": 0,
+      "studentsMentored": 0,
+      "projectsCompleted": 0,
+      "collaborationsCount": 0
+    }
+  }
+}

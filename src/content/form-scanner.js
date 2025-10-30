@@ -475,21 +475,158 @@ class FormScanner {
         this.addFieldValidation(field.element);
     }
 
-    // Update the getValueFromVault method in FormScanner class
+    // Enhanced getValueFromVault method with comprehensive field mapping
     getValueFromVault(detection, fieldElement) {
         if (!this.vaultData) return null;
 
         console.log('Getting value for field type:', detection.fieldType, 'from vault:', this.vaultData);
 
+        // Comprehensive field mapping covering all vault data
         const vaultMap = {
+            // Personal fields
             'fullName': this.vaultData.personal?.fullName,
+            'firstName': this.vaultData.personal?.firstName,
+            'lastName': this.vaultData.personal?.lastName,
+            'middleName': this.vaultData.personal?.middleName,
+            'preferredName': this.vaultData.personal?.preferredName,
             'email': this.vaultData.personal?.email,
+            'emailPersonal': this.vaultData.personal?.emailPersonal,
+            'emailWork': this.vaultData.personal?.emailWork,
+            'emailSchool': this.vaultData.personal?.emailSchool,
             'phone': this.vaultData.personal?.phone,
-            'company': this.vaultData.professional?.company,
+            'phoneHome': this.vaultData.personal?.phoneHome,
+            'phoneMobile': this.vaultData.personal?.phoneMobile,
+            'phoneWork': this.vaultData.personal?.phoneWork,
+            'address': this.vaultData.personal?.address?.fullAddress || `${this.vaultData.personal?.address?.street}, ${this.vaultData.personal?.address?.city}, ${this.vaultData.personal?.address?.state} ${this.vaultData.personal?.address?.zipCode}`,
+            'street': this.vaultData.personal?.address?.street,
+            'city': this.vaultData.personal?.address?.city,
+            'state': this.vaultData.personal?.address?.state,
+            'zipCode': this.vaultData.personal?.address?.zipCode,
+            'country': this.vaultData.personal?.address?.country,
+            'dateOfBirth': this.vaultData.personal?.dateOfBirth,
+            'age': this.vaultData.personal?.age,
+            'gender': this.vaultData.personal?.gender,
+            'nationality': this.vaultData.personal?.nationality,
+            'ethnicity': this.vaultData.personal?.ethnicity,
+            'maritalStatus': this.vaultData.personal?.maritalStatus,
+            'emergencyContact': this.vaultData.personal?.emergencyContact?.name,
+            'socialSecurity': this.vaultData.personal?.socialSecurity,
+            'driversLicense': this.vaultData.personal?.driversLicense,
+            'passportNumber': this.vaultData.personal?.passportNumber,
+            'citizenship': this.vaultData.personal?.citizenship,
+            'visaStatus': this.vaultData.personal?.visaStatus,
+            'languages': Array.isArray(this.vaultData.personal?.languages) ? this.vaultData.personal.languages.join(', ') : '',
+            'website': this.vaultData.personal?.website,
+            'linkedin': this.vaultData.personal?.linkedin,
+            'github': this.vaultData.personal?.github,
+            'twitter': this.vaultData.personal?.twitter,
+            'portfolio': this.vaultData.personal?.portfolio,
+
+            // Professional fields
             'title': this.vaultData.professional?.currentTitle,
-            'experience': this.vaultData.professional?.yearsExperience?.toString(),
-            'education': this.vaultData.professional?.education?.[0]?.degree,
-            'skills': this.vaultData.professional?.skills?.join(', ')
+            'currentTitle': this.vaultData.professional?.currentTitle,
+            'company': this.vaultData.professional?.company,
+            'industry': this.vaultData.professional?.industry,
+            'department': this.vaultData.professional?.department,
+            'yearsExperience': this.vaultData.professional?.yearsExperience?.toString(),
+            'yearsInField': this.vaultData.professional?.yearsInField?.toString(),
+            'yearsAtCompany': this.vaultData.professional?.yearsAtCompany?.toString(),
+            'employmentStatus': this.vaultData.professional?.employmentStatus,
+            'jobLevel': this.vaultData.professional?.jobLevel,
+            'salaryRange': this.vaultData.professional?.salaryRange,
+            'supervisorName': this.vaultData.professional?.supervisorName,
+            'supervisorEmail': this.vaultData.professional?.supervisorEmail,
+            'supervisorPhone': this.vaultData.professional?.supervisorPhone,
+            'skills': Array.isArray(this.vaultData.professional?.skills) ? this.vaultData.professional.skills.join(', ') : '',
+            'technicalSkills': Array.isArray(this.vaultData.professional?.technicalSkills) ? this.vaultData.professional.technicalSkills.join(', ') : '',
+            'softSkills': Array.isArray(this.vaultData.professional?.softSkills) ? this.vaultData.professional.softSkills.join(', ') : '',
+            'certifications': Array.isArray(this.vaultData.professional?.certifications) ? this.vaultData.professional.certifications.join(', ') : '',
+            'licenses': Array.isArray(this.vaultData.professional?.licenses) ? this.vaultData.professional.licenses.join(', ') : '',
+            'awards': Array.isArray(this.vaultData.professional?.awards) ? this.vaultData.professional.awards.join(', ') : '',
+            'publications': Array.isArray(this.vaultData.professional?.publications) ? this.vaultData.professional.publications.join(', ') : '',
+            'patents': Array.isArray(this.vaultData.professional?.patents) ? this.vaultData.professional.patents.join(', ') : '',
+            'professionalMemberships': Array.isArray(this.vaultData.professional?.professionalMemberships) ? this.vaultData.professional.professionalMemberships.join(', ') : '',
+
+            // Education fields
+            'education': this.vaultData.professional?.education?.[0]?.degree || this.vaultData.academic?.major,
+            'institution': this.vaultData.professional?.education?.[0]?.institution,
+            'degree': this.vaultData.professional?.education?.[0]?.degree,
+            'major': this.vaultData.academic?.major,
+            'minor': this.vaultData.academic?.minor,
+            'gpa': this.vaultData.professional?.education?.[0]?.gpa || this.vaultData.academic?.currentGpa,
+            'graduationDate': this.vaultData.professional?.education?.[0]?.graduationDate || this.vaultData.academic?.expectedGraduation,
+            'studentId': this.vaultData.academic?.studentId,
+            'academicStanding': this.vaultData.academic?.academicStanding,
+            'cumulativeGpa': this.vaultData.academic?.cumulativeGpa,
+
+            // Test scores
+            'greVerbal': this.vaultData.academic?.testScores?.gre?.verbal,
+            'greQuantitative': this.vaultData.academic?.testScores?.gre?.quantitative,
+            'greWriting': this.vaultData.academic?.testScores?.gre?.writing,
+            'gmatTotal': this.vaultData.academic?.testScores?.gmat?.total,
+            'toeflTotal': this.vaultData.academic?.testScores?.toefl?.total,
+            'ieltsOverall': this.vaultData.academic?.testScores?.ielts?.overall,
+            'satTotal': this.vaultData.academic?.testScores?.sat?.total,
+            'actComposite': this.vaultData.academic?.testScores?.act?.composite,
+
+            // Narrative fields
+            'careerObjective': this.vaultData.narratives?.careerObjective,
+            'professionalSummary': this.vaultData.narratives?.professionalSummary,
+            'personalStatement': this.vaultData.narratives?.personalStatement,
+            'diversityStatement': this.vaultData.narratives?.diversityStatement,
+            'researchStatement': this.vaultData.narratives?.researchStatement,
+            'teachingStatement': this.vaultData.narratives?.teachingStatement,
+            'leadershipStatement': this.vaultData.narratives?.leadershipStatement,
+            'motivationLetter': this.vaultData.narratives?.motivationLetter,
+            'coverLetter': this.vaultData.narratives?.coverLetter,
+            'elevatorPitch': this.vaultData.narratives?.elevatorPitch,
+            'professionalBio': this.vaultData.narratives?.professionalBio,
+            'shortBio': this.vaultData.narratives?.shortBio,
+            'longBio': this.vaultData.narratives?.longBio,
+            'linkedinSummary': this.vaultData.narratives?.linkedinSummary,
+            'aboutMe': this.vaultData.narratives?.aboutMe,
+            'personalBrand': this.vaultData.narratives?.personalBrand,
+            'uniqueValueProposition': this.vaultData.narratives?.uniqueValueProposition,
+            'careerGoals': this.vaultData.narratives?.careerGoals,
+            'fiveYearPlan': this.vaultData.narratives?.fiveYearPlan,
+            'whyThisCompany': this.vaultData.narratives?.whyThisCompany,
+            'whyThisProgram': this.vaultData.narratives?.whyThisProgram,
+            'whyThisSchool': this.vaultData.narratives?.whyThisSchool,
+            'whyThisPosition': this.vaultData.narratives?.whyThisPosition,
+            'greatestAchievement': this.vaultData.narratives?.greatestAchievement,
+            'biggestChallenge': this.vaultData.narratives?.biggestChallenge,
+            'futureContribution': this.vaultData.narratives?.futureContribution,
+            'researchInterests': this.vaultData.narratives?.researchInterests,
+            'teachingPhilosophy': this.vaultData.narratives?.teachingPhilosophy,
+            'leadershipPhilosophy': this.vaultData.narratives?.leadershipPhilosophy,
+            'workStyle': this.vaultData.narratives?.workStyle,
+            'communicationStyle': this.vaultData.narratives?.communicationStyle,
+            'conflictResolution': this.vaultData.narratives?.conflictResolution,
+            'problemSolving': this.vaultData.narratives?.problemSolving,
+            'learningStyle': this.vaultData.narratives?.learningStyle,
+            'strengths': this.vaultData.narratives?.strengths,
+            'areasForImprovement': this.vaultData.narratives?.areasForImprovement,
+            'careerHighlights': this.vaultData.narratives?.careerHighlights,
+            'professionalJourney': this.vaultData.narratives?.professionalJourney,
+            'personalGrowth': this.vaultData.narratives?.personalGrowth,
+            'communityImpact': this.vaultData.narratives?.communityImpact,
+            'futureVision': this.vaultData.narratives?.futureVision,
+
+            // Additional fields
+            'bloodType': this.vaultData.additional?.medicalInfo?.bloodType,
+            'organDonor': this.vaultData.additional?.medicalInfo?.organDonor ? 'Yes' : 'No',
+            'bankName': this.vaultData.additional?.financialInfo?.bankName,
+            'accountType': this.vaultData.additional?.financialInfo?.accountType,
+            'driversLicenseNumber': this.vaultData.additional?.legalInfo?.driversLicenseNumber,
+            'driversLicenseState': this.vaultData.additional?.legalInfo?.driversLicenseState,
+            'passportExpiration': this.vaultData.additional?.legalInfo?.passportExpiration,
+            'visaType': this.vaultData.additional?.legalInfo?.visaType,
+            'visaExpiration': this.vaultData.additional?.legalInfo?.visaExpiration,
+            'workAuthorization': this.vaultData.additional?.legalInfo?.workAuthorization,
+            'publicationsCount': this.vaultData.additional?.metrics?.publicationsCount?.toString(),
+            'citationsCount': this.vaultData.additional?.metrics?.citationsCount?.toString(),
+            'patentsCount': this.vaultData.additional?.metrics?.patentsCount?.toString(),
+            'awardsCount': this.vaultData.additional?.metrics?.awardsCount?.toString()
         };
 
         let fieldType = detection.fieldType;
@@ -503,7 +640,7 @@ class FormScanner {
 
         const value = vaultMap[fieldType];
         console.log(`Field type: ${fieldType}, Value from vault: ${value}`);
-        
+
         return value;
     }
 
